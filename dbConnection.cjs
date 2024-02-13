@@ -2,7 +2,8 @@ const {MongoClient} = require('mongodb')
 
 let dbConnection
 function connectToDb(callBack) {
-    MongoClient.connect('mongodb+srv://amalarishab:<123456789>@cluster0.5bzeucd.mongodb.net/?retryWrites=true&w=majority').then(function(client) {
+    console.log("sssssss")
+    MongoClient.connect('mongodb+srv://amalarishab:A12345@cluster0.5bzeucd.mongodb.net/ExpenseTracker?retryWrites=true&w=majority').then(function(client) {
         dbConnection = client.db()
         callBack()
     }).catch(function(error) {

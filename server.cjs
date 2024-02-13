@@ -1,10 +1,12 @@
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const {ObjectId} = require('mongodb')
 // Importing required functions from dbConnection.cjs
 const {connectToDb, getDb} = require('./dbConnection.cjs')
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 
 let db
@@ -13,9 +15,13 @@ connectToDb(function(error) {
         console.log('Could not establish connection...')
         console.log(error)
     } else { // if no error in establishing connection
+        // process.env.PORT : cloud service
+        // 8000 : local machine
+        // const port = process.env.PORT || 8000
         app.listen(8000)
         db = getDb()
-        console.log('Listening on port 8000...')
+        // console.log(`Listening on port ${port}...`)
+        console.log('listening on port 8000')
     }
 })
 
@@ -44,7 +50,7 @@ app.post('/add-entry', function(request, response) {
     })
 })
 
-app.get('/get-entries', function(request, response) {
+app.get('/get-entries', function(_request, response) {
     // Declaring an empty array
     const entries = []
     db.collection('ExpensesData')
@@ -80,7 +86,6 @@ app.delete('/delete-entry', function(request, response) {
 })
 
 app.patch('/update-entry/:id', function(request, response) {
-    console.log(request.params)
     if(ObjectId.isValid(request.params.id)) {
         db.collection('ExpensesData').updateOne(
             { _id : new ObjectId(request.params.id) }, // identifier : selecting the document which we are going to update
